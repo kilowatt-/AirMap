@@ -15,7 +15,7 @@ class Content extends React.Component {
             <Container fluid style={{ paddingLeft: 0, paddingRight: 0, marginRight: 0, height: "100%" }}>
 
                 <Row>
-                    <Col style={{paddingLeft: 0, paddingRight: 0 }}><div class={"sidebar"}>Sidebar</div></Col>
+                    <Col style={{paddingRight: 0 }}><div class={"sidebar"}>Click on an airport for more information</div></Col>
                     <Col xs={10} style={{paddingLeft: 0, marginLeft: 0, width: "100%", height: "100vh"}}>
                         <Map center={position} zoom={13}>
                             <TileLayer
