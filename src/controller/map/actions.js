@@ -4,19 +4,6 @@ export const LOAD_VISIBLE_MARKERS_START = 'LOAD_VISIBLE_MARKERS_START';
 export const LOAD_VISIBLE_MARKERS_FINISH = 'LOAD_VISIBLE_MARKETS_FINISH';
 export const LOAD_VISIBLE_MARKERS_ERROR = 'LOAD_VISIBLE_MARKERS_ERROR';
 
-export function setLocation(location) {
-    return {
-        type: SET_LOCATION,
-        payload: location
-    }
-}
-
-export function setVisibleBounds(bounds) {
-    return {
-        type: SET_BOUNDS,
-        payload: bounds,
-    }
-}
 
 export function loadVisibleMarkersStart() {
     return {
