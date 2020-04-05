@@ -1,9 +1,12 @@
 import {CircleMarker, Map, TileLayer} from "react-leaflet";
 import * as React from "react";
-import airportdeparturedata from '../airportdeparturedata.json';
+import airportDepartureData from '../airportdeparturedata.json';
 
 const MIN_ZOOM = 3;
-const MAX_ZOOM = 20;
+const MAX_ZOOM = 15;
+const CIRCLE_EXPONENT = 0.57;
+
+const AIRPORT_LIMIT = 50;
 
 const position = [10, 0];
 
@@ -16,12 +19,15 @@ class MainMap extends React.Component {
            zoom: MIN_ZOOM,
            position,
            loading: true,
-           visibleAirports: []
+           visibleAirports: [],
+           vL: 0,
+           rL: 50
        };
 
         this.mapRef = React.createRef();
         this.handlePositionChange = this.handlePositionChange.bind(this);
         this.updateAirportsOnMap = this.updateAirportsOnMap.bind(this);
+        this.renderCircle = this.renderCircle.bind(this);
     }
 
     handlePositionChange() {
@@ -40,26 +46,47 @@ class MainMap extends React.Component {
         let sw = bounds._southWest;
         let ne = bounds._northEast;
 
-        console.log(sw);
 
         let visibleAirports = [];
 
-        for (let elem of airportdeparturedata) {
-            let lat = elem.coordinates[1];
+        for (let elem of airportDepartureData) {
             let lng = elem.coordinates[0];
+            let lat = elem.coordinates[1];
 
             if (lat >= sw.lat && lat <= ne.lat && lng >= sw.lng && lng <= ne.lng) {
                 visibleAirports.push(elem);
             }
 
-            if (visibleAirports.length === 100) {
+            if (visibleAirports.length === AIRPORT_LIMIT) {
                 break;
             }
         }
 
-        console.log(JSON.stringify(visibleAirports));
+        let vL, rL = 0;
 
-        this.setState( {visibleAirports})
+        if (visibleAirports.length > 0) {
+            vL = visibleAirports[0].Departures;
+            rL = this.calculateRL(visibleAirports);
+        }
+        this.setState( {visibleAirports, vL,rL})
+    }
+
+    calculateRL(visibleAirports) {
+        //TODO: Figure out how to best calculate rL. 50 for now.
+        return 50;
+    }
+
+    renderCircle(airport) {
+        const lng = airport.coordinates[0];
+        const lat = airport.coordinates[1];
+        const vC = airport.Departures;
+        const { rL, vL } = this.state;
+
+        const circleRatio = (vC/vL);
+
+        const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
+
+        return <CircleMarker center={[lat,lng]} radius={radius} />
     }
 
     render() {
@@ -73,11 +100,8 @@ class MainMap extends React.Component {
                 url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
             />
 
-                {this.state.visibleAirports.map((elem) => {
-                    let lat = elem.coordinates[1];
-                    let lng = elem.coordinates[0];
-
-                    return <CircleMarker center={[lat,lng]}/>
+                {this.state.visibleAirports.map((airport) => {
+                    return this.renderCircle(airport);
                 })}
         </Map>
             </div>)
