@@ -91,7 +91,7 @@ class MainMap extends React.Component {
 
     render() {
         return (
-            <div><Map center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m} maxBoundsViscosity={1} onMoveEnd={this.handlePositionChange} whenReady={this.updateAirportsOnMap} >
+            <div><Map worldCopyJump={true} center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m} maxBoundsViscosity={1} onMoveEnd={this.handlePositionChange} whenReady={this.updateAirportsOnMap} >
             <TileLayer
                 minZoom={MIN_ZOOM}
                 maxZoom={MAX_ZOOM}
