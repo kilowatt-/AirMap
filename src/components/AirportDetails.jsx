@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import RouteDetailTable from "./RouteDetailTable";
 
 class AirportDetails extends React.Component {
     constructor(props) {
@@ -15,21 +16,24 @@ class AirportDetails extends React.Component {
     renderAirportDetails() {
         const {activeAirport} = this.props;
         const flagUrl = `${process.env.PUBLIC_URL}/flags/${activeAirport.State.toLowerCase()}.gif`;
-        console.log(process.env.REACT_APP_OPENSKY_API_URL);
         return (
             <div>
                 <h2 align={"center"} style={{wordBreak: "break-all"}}>{activeAirport.AirportName}</h2>
                 <h4 align={"center"}>{activeAirport.iata}/{activeAirport.Airport}</h4>
                 <Container>
-                <Row>
-                    <Col><p align={"center"}><img src={flagUrl} width={16} height={11} /> {activeAirport.Name}<br />
-                        {activeAirport.city !== '' ? <><b>City: </b> {activeAirport.city}</> : undefined }</p></Col>
-                </Row>
+                    <Row>
+                        <Col><p align={"center"}><img src={flagUrl} width={16} height={11} /> {activeAirport.Name}<br />
+                            {activeAirport.city !== '' ? <><b>City: </b> {activeAirport.city}</> : undefined }</p></Col>
+                    </Row>
 
-                        <Row style={{paddingLeft: 5}}><b>Departures</b>&nbsp;{activeAirport.Departures.toLocaleString()}</Row>
-                        <Row style={{paddingLeft: 5}}><b>International</b>&nbsp;{activeAirport.International.toLocaleString()}</Row>
-                        <Row style={{paddingLeft: 5}}><b>Domestic</b>&nbsp;{activeAirport.Domestic.toLocaleString()}</Row>
-            </Container>
+                    <Row style={{paddingLeft: 5}}><b>Departures</b>&nbsp;{activeAirport.Departures.toLocaleString()}</Row>
+                    <Row style={{paddingLeft: 5}}><b>International</b>&nbsp;{activeAirport.International.toLocaleString()}</Row>
+                    <Row style={{paddingLeft: 5}}><b>Domestic</b>&nbsp;{activeAirport.Domestic.toLocaleString()}</Row>
+                    <h4>Busiest destinations</h4>
+                    <Row style={{marginTop: 15, alignContent: "center"}}>
+                        <RouteDetailTable />
+                    </Row>
+                </Container>
             </div>
         )
     }

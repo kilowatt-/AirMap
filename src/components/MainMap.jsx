@@ -100,7 +100,7 @@ class MainMap extends React.Component {
 
         const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
 
-        return <CircleMarker center={[lat,lng]} radius={radius} onClick={(e) => {
+        return <CircleMarker center={[lat,lng]} key={airport.Airport} radius={radius} onClick={(e) => {
             const position = [lat, lng];
             this.mapRef.leafletElement.flyTo(position, this.state.zoom, {duration: 0.25});
 
