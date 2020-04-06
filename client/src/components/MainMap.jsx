@@ -149,7 +149,8 @@ class MainMap extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-      activeAirport: state.activeAirport
+      activeAirport: state.activeAirport,
+        routes: state.routes,
     };
 };
 

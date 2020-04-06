@@ -19,7 +19,7 @@ const initialState = {
 function processData(data, activeAirport) {
     let routesMap = new Map();
 
-    for (let response of data.data) {
+    for (let response of data) {
         const arrivalAirport = response.estArrivalAirport;
 
         if (routesMap.has(arrivalAirport)) {
@@ -50,7 +50,6 @@ function processData(data, activeAirport) {
         return b.departures - a.departures;
     });
 
-    console.log("ROUTES: " + routes);
     return routes;
 }
 

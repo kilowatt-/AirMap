@@ -1,8 +1,5 @@
 import axios from "axios";
 
-const START_TIME_EPOCH = 1577836800;
-const END_TIME_EPOCH = 1578441600;
-
 export const SET_ACTIVE_AIRPORT = "SET_ACTIVE_AIRPORT";
 export const UNSET_ACTIVE_AIRPORT = "UNSET_ACTIVE_AIRPORT";
 
@@ -44,30 +41,30 @@ export function getRoutesError(err) {
 }
 
 export function getRouteDataForActiveAirport(airportCode) {
-    const url = process.env.REACT_APP_OPENSKY_API_URL;
+    const url = process.env.REACT_APP_API_URL;
 
     return async dispatch => {
         dispatch(getRoutesStart());
         try {
-            const data = await axios.get(url, {
-                params: {
-                    begin: START_TIME_EPOCH,
-                    end: END_TIME_EPOCH,
-                    airport: airportCode
-                }
-            });
+            const res = await axios.get(`${url}/${airportCode}`);
 
-            dispatch(getRoutesFinish(data));
+            dispatch(getRoutesFinish(res.data));
         } catch (err) {
-            let status = err.response.status;
             let errMsg;
-            if (status === 404) {
-                errMsg = 'Sorry, no departure data found for this airport.'
-            } else if (status === 504) {
-                errMsg = 'Sorry, the API is unable to respond at the moment. Please try again later.'
+            if (err.response) {
+                let status = err.response.status;
+
+                if (status === 404) {
+                    errMsg = 'Sorry, no route data found for this airport.'
+                } else if (status === 504) {
+                    errMsg = 'Sorry, the API is unable to respond at the moment. Please try again later.'
+                } else {
+                    errMsg = 'Sorry, we had trouble fetching route data. Please try again later.'
+                }
             } else {
-                errMsg = 'Sorry, we had trouble fetching departure data. Please try again later.'
+                errMsg = 'Sorry, we had trouble fetching route data. Please try again later.'
             }
+
             dispatch(getRoutesError(errMsg));
         }
 

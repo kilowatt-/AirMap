@@ -22,15 +22,17 @@ class AirportDetails extends React.Component {
                 <h4 align={"center"}>{activeAirport.iata}/{activeAirport.Airport}</h4>
                 <Container>
                     <Row>
-                        <Col><p align={"center"}><img src={flagUrl} width={16} height={11} /> {activeAirport.Name}<br />
+                        <Col><p align={"center"}><img src={flagUrl} alt={activeAirport.State} width={16} height={11} /> {activeAirport.Name}<br />
                             {activeAirport.city !== '' ? <><b>City: </b> {activeAirport.city}</> : undefined }</p></Col>
                     </Row>
 
+                    <Row><h4>2019 statistics</h4></Row>
                     <Row style={{paddingLeft: 5}}><b>Departures</b>&nbsp;{activeAirport.Departures.toLocaleString()}</Row>
                     <Row style={{paddingLeft: 5}}><b>International</b>&nbsp;{activeAirport.International.toLocaleString()}</Row>
                     <Row style={{paddingLeft: 5}}><b>Domestic</b>&nbsp;{activeAirport.Domestic.toLocaleString()}</Row>
-                    <h4>Busiest destinations</h4>
+
                     <Row style={{marginTop: 15, alignContent: "center"}}>
+                        <h4>Busiest routes</h4>
                         <RouteDetailTable />
                     </Row>
                 </Container>

@@ -28,7 +28,7 @@ class RouteDetailTable extends React.Component {
                     <tr>
                         <th></th>
                         <th>Airport</th>
-                        <th>Departures</th>
+                        <th>Weekly Departures</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -36,9 +36,9 @@ class RouteDetailTable extends React.Component {
                         let airportDetails = airportMap.get(object.airport);
                         const flagUrl = `${process.env.PUBLIC_URL}/flags/${airportDetails.State.toLowerCase()}.gif`;
                         return (
-                            <tr>
+                            <tr key={index}>
                                 <td>{index+1}</td>
-                                <td><img src={flagUrl} /> {airportDetails.AirportName} ({airportDetails.iata}/{airportDetails.Airport})</td>
+                                <td><img src={flagUrl} alt={airportDetails.State} /> {airportDetails.AirportName} ({airportDetails.iata}/{airportDetails.Airport})</td>
                                 <td>{object.departures.toLocaleString()}</td>
                             </tr>
                         )
