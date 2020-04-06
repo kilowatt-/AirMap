@@ -1,6 +1,18 @@
-import {CircleMarker, Map as LeafletMap, TileLayer} from "react-leaflet";
+import {CircleMarker, Map as LeafletMap, Marker, TileLayer} from "react-leaflet";
 import * as React from "react";
 import airportDepartureData from '../airportdeparturedata.json';
+import {setActiveAirport, unsetActiveAirport} from "../controller/actions";
+import {connect} from "react-redux";
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+});
 
 const MIN_ZOOM = 3;
 const MAX_ZOOM = 10;
@@ -28,6 +40,8 @@ class MainMap extends React.Component {
         this.handlePositionChange = this.handlePositionChange.bind(this);
         this.updateAirportsOnMap = this.updateAirportsOnMap.bind(this);
         this.renderCircle = this.renderCircle.bind(this);
+        this.renderActiveAirport = this.renderActiveAirport.bind(this);
+        this.unsetActiveAirport = this.unsetActiveAirport.bind(this);
     }
 
     handlePositionChange() {
@@ -86,17 +100,37 @@ class MainMap extends React.Component {
 
         const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
 
-        return <CircleMarker center={[lat,lng]} radius={radius} onClick={() => {
+        return <CircleMarker center={[lat,lng]} radius={radius} onClick={(e) => {
             const position = [lat, lng];
             const zoom = MAX_ZOOM/2;
-            this.mapRef.leafletElement.flyTo(position, (this.state.zoom < zoom) ? zoom : this.state.zoom, {duration: 0.25});
+            this.mapRef.leafletElement.flyTo(position, (this.state.zoom > zoom) ? zoom : this.state.zoom, {duration: 0.25});
+
+
+            this.props.setActiveAirport(airport);
+
+            L.DomEvent.stopPropagation(e);
         }} />
+    }
+
+    renderActiveAirport() {
+        const {activeAirport} = this.props;
+        const lng = activeAirport.coordinates[0];
+        const lat = activeAirport.coordinates[1];
+
+        return <Marker position={[lat, lng]} onClick={e => L.DomEvent.stopPropagation(e)} />
+    }
+
+    unsetActiveAirport() {
+        if (Object.keys(this.props.activeAirport).length > 0) {
+            this.props.unsetActiveAirport();
+        }
     }
 
     render() {
         const array = Array.from(this.state.visibleAirports.values());
+        const isActiveAirportPresent = Object.keys(this.props.activeAirport).length > 0;
         return (
-            <div><LeafletMap worldCopyJump={true} center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m} maxBoundsViscosity={1} onMoveEnd={this.handlePositionChange} whenReady={this.updateAirportsOnMap} >
+            <div><LeafletMap onClick={this.unsetActiveAirport}worldCopyJump={true} center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m} maxBoundsViscosity={1} onMoveEnd={this.handlePositionChange} whenReady={this.updateAirportsOnMap} >
             <TileLayer
                 minZoom={MIN_ZOOM}
                 maxZoom={MAX_ZOOM}
@@ -104,13 +138,26 @@ class MainMap extends React.Component {
                 Data sources: IATA Airport Departure Data, 2019 '
                 url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
             />
-
-                {array.map((airport) => {
+                {isActiveAirportPresent ? this.renderActiveAirport() : array.map((airport) => {
                     return this.renderCircle(airport);
                 })}
+
         </LeafletMap>
             </div>)
     }
 }
 
-export default MainMap;
+const mapStateToProps = (state) => {
+    return {
+      activeAirport: state.activeAirport
+    };
+};
+
+const mapDispatchToProps= (dispatch) => {
+    return {
+        setActiveAirport: (airport) => dispatch(setActiveAirport(airport)),
+        unsetActiveAirport: () => dispatch(unsetActiveAirport())
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainMap);
