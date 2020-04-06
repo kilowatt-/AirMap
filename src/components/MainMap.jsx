@@ -1,14 +1,14 @@
-import {CircleMarker, Map, TileLayer} from "react-leaflet";
+import {CircleMarker, Map as LeafletMap, TileLayer} from "react-leaflet";
 import * as React from "react";
 import airportDepartureData from '../airportdeparturedata.json';
 
 const MIN_ZOOM = 3;
-const MAX_ZOOM = 15;
+const MAX_ZOOM = 10;
 const CIRCLE_EXPONENT = 0.57;
 
 const AIRPORT_LIMIT = 50;
 
-const position = [10, 0];
+const position = [0, 0];
 
 class MainMap extends React.Component {
 
@@ -19,7 +19,7 @@ class MainMap extends React.Component {
            zoom: MIN_ZOOM,
            position,
            loading: true,
-           visibleAirports: [],
+           visibleAirports: new Map(),
            vL: 0,
            rL: 50
        };
@@ -47,33 +47,33 @@ class MainMap extends React.Component {
         let ne = bounds._northEast;
 
 
-        let visibleAirports = [];
+        let visibleAirports = new Map();
 
         for (let elem of airportDepartureData) {
             let lng = elem.coordinates[0];
             let lat = elem.coordinates[1];
 
             if (lat >= sw.lat && lat <= ne.lat && lng >= sw.lng && lng <= ne.lng) {
-                visibleAirports.push(elem);
+                visibleAirports.set(elem.Airport, elem);
             }
 
-            if (visibleAirports.length === AIRPORT_LIMIT) {
+            if (visibleAirports.size === AIRPORT_LIMIT) {
                 break;
             }
         }
 
         let vL, rL = 0;
 
-        if (visibleAirports.length > 0) {
-            vL = visibleAirports[0].Departures;
-            rL = this.calculateRL(visibleAirports);
+        if (visibleAirports.size > 0) {
+            vL = visibleAirports.values().next().value.Departures;
+            rL = this.calculateRL();
         }
+
         this.setState( {visibleAirports, vL,rL})
     }
 
-    calculateRL(visibleAirports) {
-        //TODO: Figure out how to best calculate rL. 50 for now.
-        return 50;
+    calculateRL() {
+        return this.state.zoom * 10;
     }
 
     renderCircle(airport) {
@@ -86,12 +86,17 @@ class MainMap extends React.Component {
 
         const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
 
-        return <CircleMarker center={[lat,lng]} radius={radius} />
+        return <CircleMarker center={[lat,lng]} radius={radius} onClick={() => {
+            const position = [lat, lng];
+            const zoom = MAX_ZOOM/2;
+            this.mapRef.leafletElement.flyTo(position, (this.state.zoom < zoom) ? zoom : this.state.zoom, {duration: 0.25});
+        }} />
     }
 
     render() {
+        const array = Array.from(this.state.visibleAirports.values());
         return (
-            <div><Map worldCopyJump={true} center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m} maxBoundsViscosity={1} onMoveEnd={this.handlePositionChange} whenReady={this.updateAirportsOnMap} >
+            <div><LeafletMap worldCopyJump={true} center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m} maxBoundsViscosity={1} onMoveEnd={this.handlePositionChange} whenReady={this.updateAirportsOnMap} >
             <TileLayer
                 minZoom={MIN_ZOOM}
                 maxZoom={MAX_ZOOM}
@@ -100,10 +105,10 @@ class MainMap extends React.Component {
                 url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
             />
 
-                {this.state.visibleAirports.map((airport) => {
+                {array.map((airport) => {
                     return this.renderCircle(airport);
                 })}
-        </Map>
+        </LeafletMap>
             </div>)
     }
 }
