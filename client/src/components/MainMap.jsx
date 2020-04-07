@@ -244,6 +244,7 @@ class MainMap extends React.Component {
             <div><LeafletMap onClick={this.unsetActiveAirport} onZoomEnd={this.handleZoomChange} center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m}
                              onMoveEnd={this.handlePositionChange} whenReady={this.updateVisibleAirportsOnMap} maxBounds={[[-105, -195], [105, 195]]} worldCopyJump={true} >
                 <TileLayer
+                    detectRetina={true}
                     minZoom={MIN_ZOOM}
                     maxZoom={MAX_ZOOM}
                     attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors <br />
