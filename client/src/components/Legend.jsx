@@ -61,14 +61,14 @@ class Legend extends MapControl {
             for (let i = 0; i < grades.length; i++) {
 
                 labels.push(
-                    `<svg height="${this.props.rL*2}" width="${this.props.rL*2}">
-                      <circle cx="${this.props.rL}" cy="${this.props.rL}" r="${grades[i].radius}" stroke="#59AE09" stroke-width="3" fill="#59AE09" fill-opacity="0.2" />
+                    `<svg height="${this.props.rL*2.1}" width="${this.props.rL*2.1}">
+                      <circle cx="50%" cy="50%" r="${grades[i].radius}" stroke="#59AE09" stroke-width="3" fill="#59AE09" fill-opacity="0.2" />
                     </svg>
                     ${grades[i].number.toLocaleString()}`
                 );
             }
 
-            div.innerHTML = labels.join("<br>");
+            div.innerHTML = `<b>Legend</b><br />${labels.join("<br />")}`;
             return div;
         };
 
