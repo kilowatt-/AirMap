@@ -1,4 +1,10 @@
-import {CircleMarker, Map as LeafletMap, Marker, Popup, TileLayer} from "react-leaflet";
+import {
+    CircleMarker,
+    Map as LeafletMap,
+    Marker,
+    Popup,
+    TileLayer
+} from "react-leaflet";
 import * as React from "react";
 import airportDepartureData from '../airportdeparturedata.json';
 import {setActiveAirport, unsetActiveAirport} from "../controller/actions";
@@ -6,7 +12,7 @@ import {connect} from "react-redux";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { GeodesicLine } from 'react-leaflet-geodesic'
-
+import Legend from "./Legend";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -18,7 +24,7 @@ L.Icon.Default.mergeOptions({
 
 const MIN_ZOOM = 3;
 const MAX_ZOOM = 10;
-const CIRCLE_EXPONENT = 0.57;
+export const CIRCLE_EXPONENT = 0.57;
 
 const AIRPORT_LIMIT = 50;
 
@@ -240,8 +246,8 @@ class MainMap extends React.Component {
                 Data sources: ICAO iSTARS API Data Service, OpenSky Network'
                     url="http://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
                 />
+                <Legend visibleAirports={this.state.visibleAirports} rL={this.state.rL} />
                 {this.renderMarkers()}
-
             </LeafletMap>
             </div>)
     }
