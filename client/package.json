@@ -1,6 +1,6 @@
 {
   "name": "airmap",
-  "homepage": "http://airmapp.herokuapp.com",
+  "homepage": "https://airmapp.herokuapp.com",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:5000/",
