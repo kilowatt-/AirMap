@@ -1,5 +1,5 @@
 import {
-    CircleMarker,
+    CircleMarker, LayersControl,
     Map as LeafletMap,
     Marker,
     Popup,
@@ -40,7 +40,6 @@ class MainMap extends React.Component {
             position,
             loading: true,
             visibleAirports: [],
-            visibleRoutes: [],
             vL: 0,
             rL: MIN_ZOOM*10
         };
@@ -68,6 +67,10 @@ class MainMap extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if ((prevProps.activeAirport && !this.props.activeAirport) || (this.props.activeAirport && prevProps.routes !== this.props.routes)) {
             this.updateVisibleAirportsOnMap();
+        }
+
+        if (!prevProps.fetchingData && this.props.fetchingData || (!prevProps.activeAirport && this.props.activeAirport)) {
+            this.setState({visibleAirports: []});
         }
     }
 
@@ -257,6 +260,7 @@ const mapStateToProps = (state) => {
     return {
         activeAirport: state.activeAirport,
         routes: state.routes,
+        fetchingData: state.fetchingData
     };
 };
 
