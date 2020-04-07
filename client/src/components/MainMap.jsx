@@ -88,7 +88,7 @@ class MainMap extends React.Component {
                     visibleAirports.push(elem);
                 }
 
-                if (visibleAirports.length === AIRPORT_LIMIT) {
+                if (!this.props.activeAirport && visibleAirports.length === AIRPORT_LIMIT) {
                     break;
                 }
             }
@@ -110,17 +110,12 @@ class MainMap extends React.Component {
     renderCircle(airport, representsRoute) {
         const lng = airport.coordinates[0];
         const lat = airport.coordinates[1];
-        const vC = airport.Departures;
-        const { rL, vL } = this.state;
 
-        const circleRatio = (vC/vL);
-
-        const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
         const flagUrl = `${process.env.PUBLIC_URL}/flags/${airport.State.toLowerCase()}.gif`;
         if (representsRoute) {
 
-            return <CircleMarker fillOpacity={0.5} color="red" center={[lat, lng]}
-                                 key={airport.Airport} radius={radius} onClick={(e) => {L.DomEvent.stopPropagation(e);}}
+            return <CircleMarker center={[lat, lng]}
+                                 key={airport.Airport} radius={5} onClick={(e) => {L.DomEvent.stopPropagation(e);}}
                                  onMouseOver={(e) => {
                                      e.target.openPopup();
                                  }}
@@ -131,6 +126,12 @@ class MainMap extends React.Component {
                 <Popup closeButton={false}><img src={flagUrl} alt={airport.State.toLowerCase()} /> {`${airport.AirportName} (${airport.Airport}/${airport.iata}) - ${airport.Departures}`}</Popup>
             </CircleMarker>
         } else {
+            const vC = airport.Departures;
+            const { rL, vL } = this.state;
+
+            const circleRatio = (vC/vL);
+
+            const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
             return <CircleMarker center={[lat, lng]}
                                  key={airport.Airport} radius={radius} onClick={(e) => {
                 const position = [lat, lng];
@@ -183,7 +184,7 @@ class MainMap extends React.Component {
     render() {
         return (
             <div><LeafletMap onClick={this.unsetActiveAirport} onZoomEnd={this.handleZoomChange} worldCopyJump={true} center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m}
-                             maxBoundsViscosity={1} onMoveEnd={this.handlePositionChange} whenReady={this.updateVisibleAirportsOnMap} maxBounds={[[-90, -180], [90, 180]]} >
+                             maxBoundsViscosity={1} onMoveEnd={this.handlePositionChange} whenReady={this.updateVisibleAirportsOnMap} maxBounds={[[-105, -195], [105, 195]]} >
                 <TileLayer
                     minZoom={MIN_ZOOM}
                     maxZoom={MAX_ZOOM}
