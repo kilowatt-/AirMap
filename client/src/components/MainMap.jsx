@@ -26,7 +26,7 @@ const MIN_ZOOM = 3;
 const MAX_ZOOM = 10;
 export const CIRCLE_EXPONENT = 0.57;
 
-const AIRPORT_LIMIT = 50;
+export const AIRPORT_LIMIT = 50;
 
 const position = [0, 0];
 
@@ -245,13 +245,12 @@ class MainMap extends React.Component {
                              onMoveEnd={this.handlePositionChange} whenReady={this.updateVisibleAirportsOnMap} maxBounds={[[-105, -195], [105, 195]]} worldCopyJump={true} >
                 <TileLayer
                     minZoom={MIN_ZOOM}
-                    detectRetina={true}
                     maxZoom={MAX_ZOOM}
                     attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors <br />
                 Data sources: ICAO iSTARS API Data Service, OpenSky Network'
                     url="http://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
                 />
-                <Legend visibleAirports={this.state.visibleAirports} rL={this.state.rL} />
+                <Legend visibleAirports={this.state.visibleAirports} rL={this.state.rL} active={(this.props.activeAirport !== undefined)} />
                 {this.renderMarkers()}
             </LeafletMap>
             </div>)

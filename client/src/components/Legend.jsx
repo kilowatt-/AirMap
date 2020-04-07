@@ -68,16 +68,13 @@ class Legend extends MapControl {
                 );
             }
 
-            div.innerHTML = `<b>Legend</b><br />${labels.join("<br />")}`;
+            let labelText = (this.props.active) ? "Weekly departures" : "Departures";
+            div.innerHTML = `<b>${labelText}</b><br />${labels.join("<br />")}`;
             return div;
         };
 
 
         legendControl.addTo(map);
-    }
-
-    removeLegend() {
-
     }
 
     componentDidUpdate(prevProps) {
