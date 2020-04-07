@@ -4,8 +4,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 
-var sslRedirect = require('heroku-ssl-redirect');
-
 const START_EPOCH = 1576368000;
 const END_EPOCH = START_EPOCH + 604800;
 
@@ -17,7 +15,6 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-app.use(sslRedirect());
 
 app.get('/routeData/:airportCode', async (req, res) => {
 
