@@ -2,6 +2,7 @@ const axios = require('axios');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 
 const START_EPOCH = 1576368000;
 const END_EPOCH = START_EPOCH + 604800;
