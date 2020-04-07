@@ -69,7 +69,7 @@ class MainMap extends React.Component {
             this.updateVisibleAirportsOnMap();
         }
 
-        if (!prevProps.fetchingData && this.props.fetchingData || (!prevProps.activeAirport && this.props.activeAirport)) {
+        if ((!prevProps.fetchingData && this.props.fetchingData) || (!prevProps.activeAirport && this.props.activeAirport)) {
             this.setState({visibleAirports: []});
         }
     }
@@ -85,10 +85,12 @@ class MainMap extends React.Component {
     }
 
     handleZoomChange() {
-        let zoom = this.mapRef.leafletElement.getZoom();
-        let rL = this.calculateRL(zoom);
+        if (this.mapRef) {
+            let zoom = this.mapRef.leafletElement.getZoom();
+            let rL = this.calculateRL(zoom);
 
-        this.setState({zoom, rL});
+            this.setState({zoom, rL});
+        }
     }
 
     updateVisibleAirportsOnMap() {

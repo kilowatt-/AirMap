@@ -20,27 +20,30 @@ class RouteDetailTable extends React.Component {
             )
         } else {
             return (
-                <Table striped bordered hover size="sm" variant={"dark"} responsive={true} >
-                    <thead>
-                    <tr>
-                        <th> </th>
-                        <th>Airport</th>
-                        <th>Weekly Departures</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.props.routes ? this.props.routes.map((airport, index) => {
-                        const flagUrl = `${process.env.PUBLIC_URL}/flags/${airport.State.toLowerCase()}.gif`;
-                        return (
-                            <tr key={index}>
-                                <td>{index+1}</td>
-                                <td><img src={flagUrl} alt={airport.State} /> {airport.AirportName} ({airport.iata}/{airport.Airport})</td>
-                                <td>{airport.Departures.toLocaleString()}</td>
-                            </tr>
-                        )
-                    }) : undefined}
-                    </tbody>
-                </Table>
+                <div style={{"overflowY": "scroll", "maxHeight": "75vh"}}>
+                    <Table striped bordered hover size="sm" variant={"dark"} responsive={true} >
+                        <thead>
+                        <tr>
+                            <th> </th>
+                            <th>Airport</th>
+                            <th>Estimated Weekly Departures</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.props.routes ? this.props.routes.map((airport, index) => {
+                            const flagUrl = `${process.env.PUBLIC_URL}/flags/${airport.State.toLowerCase()}.gif`;
+                            return (
+                                <tr key={index}>
+                                    <td>{index+1}</td>
+                                    <td><img src={flagUrl} alt={airport.State} /> {airport.AirportName} ({airport.iata}/{airport.Airport})</td>
+                                    <td>{airport.Departures.toLocaleString()}</td>
+                                </tr>
+                            )
+                        }) : undefined}
+                        </tbody>
+                    </Table>
+                </div>
+
             )
         }
     }
