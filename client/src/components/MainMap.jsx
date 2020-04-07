@@ -164,6 +164,7 @@ class MainMap extends React.Component {
         if (representsRoute) {
 
             return <CircleMarker center={{lat, lng}}
+                                 color={"#59AE09"}
                                  key={airport.Airport} radius={radius} onClick={(e) => {L.DomEvent.stopPropagation(e);}}
                                  onMouseOver={(e) => {
                                      e.target.openPopup();
@@ -177,6 +178,7 @@ class MainMap extends React.Component {
         } else {
 
             return <CircleMarker center={{lat, lng}}
+                                 color={"#59AE09"}
                                  key={airport.Airport} radius={radius} onClick={(e) => {
                 const position = {lat, lng};
                 this.mapRef.leafletElement.flyTo(position, this.state.zoom, {duration: 0.25});
@@ -198,7 +200,7 @@ class MainMap extends React.Component {
         const lng = activeAirport.coordinates[0];
         const lat = activeAirport.coordinates[1];
 
-        return <Marker position={{lat, lng}} onClick={e => L.DomEvent.stopPropagation(e)} />
+        return <Marker position={{lat, lng}} onClick={e => L.DomEvent.stopPropagation(e)} color={"red"} />
     }
 
     unsetActiveAirport() {
