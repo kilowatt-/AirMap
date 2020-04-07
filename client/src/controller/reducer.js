@@ -58,7 +58,7 @@ export const reducer = (state = initialState, action) => {
         case SET_ACTIVE_AIRPORT:
             return {...state, activeAirport: action.payload};
         case UNSET_ACTIVE_AIRPORT:
-            return {...state, activeAirport: undefined};
+            return {...state, activeAirport: undefined, routes: undefined};
         case GET_ROUTES_START:
             return {...state, fetchingData: true, fetchingDataErr: ''};
         case GET_ROUTES_FINISH:
