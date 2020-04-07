@@ -5,6 +5,8 @@ import {setActiveAirport, unsetActiveAirport} from "../controller/actions";
 import {connect} from "react-redux";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { GeodesicLine } from 'react-leaflet-geodesic'
+
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -45,6 +47,16 @@ class MainMap extends React.Component {
         this.unsetActiveAirport = this.unsetActiveAirport.bind(this);
         this.renderMarkers = this.renderMarkers.bind(this);
         this.handleZoomChange = this.handleZoomChange.bind(this);
+        this.drawLines = this.drawLines.bind(this);
+    }
+
+    componentDidMount() {
+        const script = document.createElement("script");
+
+        script.src = "https://cdn.jsdelivr.net/npm/leaflet.geodesic";
+        script.async = true;
+
+        document.body.appendChild(script);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -107,15 +119,52 @@ class MainMap extends React.Component {
         return zoom * 10;
     }
 
+    drawLines() {
+        let sourceLng = this.props.activeAirport.coordinates[0];
+        let sourceLat = this.props.activeAirport.coordinates[1];
+
+        let colours = ['#ff0000', '#66ff33', '#33ccff'];
+
+        let lines = [];
+
+        for (let i = 0; i < this.state.visibleAirports.length; i++) {
+            let airport = this.state.visibleAirports[i];
+
+            let lng = airport.coordinates[0];
+            let lat = airport.coordinates[1];
+
+            const waypoints = [ [sourceLat, sourceLng], [lat, lng] ];
+
+            const options = {
+                weight: 2,
+                opacity: 0.5,
+                color: colours[i % colours.length]
+            };
+
+            const line = <GeodesicLine positions={waypoints} options={options} />;
+
+            lines.push(line);
+        }
+
+        return lines;
+    }
+
     renderCircle(airport, representsRoute) {
         const lng = airport.coordinates[0];
         const lat = airport.coordinates[1];
 
+        const vC = airport.Departures;
+        const { rL, vL } = this.state;
+
+        const circleRatio = (vC/vL);
+
+        const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
+
         const flagUrl = `${process.env.PUBLIC_URL}/flags/${airport.State.toLowerCase()}.gif`;
         if (representsRoute) {
 
-            return <CircleMarker center={[lat, lng]}
-                                 key={airport.Airport} radius={5} onClick={(e) => {L.DomEvent.stopPropagation(e);}}
+            return <CircleMarker center={{lat, lng}}
+                                 key={airport.Airport} radius={radius} onClick={(e) => {L.DomEvent.stopPropagation(e);}}
                                  onMouseOver={(e) => {
                                      e.target.openPopup();
                                  }}
@@ -126,15 +175,10 @@ class MainMap extends React.Component {
                 <Popup closeButton={false}><img src={flagUrl} alt={airport.State.toLowerCase()} /> {`${airport.AirportName} (${airport.Airport}/${airport.iata}) - ${airport.Departures}`}</Popup>
             </CircleMarker>
         } else {
-            const vC = airport.Departures;
-            const { rL, vL } = this.state;
 
-            const circleRatio = (vC/vL);
-
-            const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
-            return <CircleMarker center={[lat, lng]}
+            return <CircleMarker center={{lat, lng}}
                                  key={airport.Airport} radius={radius} onClick={(e) => {
-                const position = [lat, lng];
+                const position = {lat, lng};
                 this.mapRef.leafletElement.flyTo(position, this.state.zoom, {duration: 0.25});
                 this.props.setActiveAirport(airport);
                 L.DomEvent.stopPropagation(e);
@@ -154,7 +198,7 @@ class MainMap extends React.Component {
         const lng = activeAirport.coordinates[0];
         const lat = activeAirport.coordinates[1];
 
-        return <Marker position={[lat, lng]} onClick={e => L.DomEvent.stopPropagation(e)} />
+        return <Marker position={{lat, lng}} onClick={e => L.DomEvent.stopPropagation(e)} />
     }
 
     unsetActiveAirport() {
@@ -170,7 +214,8 @@ class MainMap extends React.Component {
                     return this.renderCircle(airport, true);
                 });
                 routes.push(this.renderActiveAirport());
-                return routes;
+                let lines = this.drawLines();
+                return routes.concat(lines);
             }
             return this.renderActiveAirport();
         } else {
@@ -183,10 +228,11 @@ class MainMap extends React.Component {
 
     render() {
         return (
-            <div><LeafletMap onClick={this.unsetActiveAirport} onZoomEnd={this.handleZoomChange} worldCopyJump={true} center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m}
-                             maxBoundsViscosity={1} onMoveEnd={this.handlePositionChange} whenReady={this.updateVisibleAirportsOnMap} maxBounds={[[-105, -195], [105, 195]]} >
+            <div><LeafletMap onClick={this.unsetActiveAirport} onZoomEnd={this.handleZoomChange} center={this.state.position} zoom={this.state.zoom} ref={(m) => this.mapRef = m}
+                             onMoveEnd={this.handlePositionChange} whenReady={this.updateVisibleAirportsOnMap} maxBounds={[[-105, -195], [105, 195]]} worldCopyJump={true} >
                 <TileLayer
                     minZoom={MIN_ZOOM}
+                    detectRetina={true}
                     maxZoom={MAX_ZOOM}
                     attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors <br />
                 Data sources: ICAO iSTARS API Data Service, OpenSky Network'
