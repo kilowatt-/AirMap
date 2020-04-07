@@ -10,9 +10,9 @@ import AirportDetails from "./AirportDetails";
 class Content extends React.Component {
     render() {
         return (
-            <Container fluid style={{ paddingLeft: 0, paddingRight: 0, marginRight: 0, height: "100%", overflowY: "auto"  }} >
+            <Container fluid style={{ paddingLeft: 0, paddingRight: 0, marginRight: 0, height: "100%", "overflow-x": "auto"  }} >
                 <Row>
-                    <Col xs={2} xl={2} style={{paddingRight: 0 }}><AirportDetails /></Col>
+                    <Col xs={2} xl={2} style={{paddingRight: 0, 'max-height': '100%', 'overflow-y': 'hidden' }}><AirportDetails /></Col>
                     <Col xs={10} xl={10} style={{paddingLeft: 0, marginLeft: 0, width: "100%", height: "100vh"}}>
                         <MainMap />
                     </Col>

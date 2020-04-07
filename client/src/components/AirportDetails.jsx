@@ -14,10 +14,12 @@ class AirportDetails extends React.Component {
     }
 
     renderAirportDetails() {
+        const maxHeight = window.innerHeight;
+
         const {activeAirport} = this.props;
         const flagUrl = `${process.env.PUBLIC_URL}/flags/${activeAirport.State.toLowerCase()}.gif`;
         return (
-            <div>
+            <div style={{'max-height': maxHeight, 'overflow-y': 'auto'}}>
                 <h2 align={"center"} style={{wordBreak: "break-all"}}>{activeAirport.AirportName}</h2>
                 <h4 align={"center"}>{activeAirport.iata}/{activeAirport.Airport}</h4>
                 <Container>

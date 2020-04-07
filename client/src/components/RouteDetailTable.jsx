@@ -12,9 +12,7 @@ class RouteDetailTable extends React.Component {
     render() {
         if (this.props.fetchingData) {
             return (
-                <Spinner animation="border" role="status">
-                    <span className="sr-only">Loading...</span>
-                </Spinner>
+                <Spinner animation="border" role="status" />
             )
         } else if (this.props.fetchingDataErr !== '') {
             return (
