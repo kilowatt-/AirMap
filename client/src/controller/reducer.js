@@ -42,12 +42,14 @@ function processData(data, activeAirport) {
         };
 
         if (object.airport !== activeAirport.Airport && airportMap.has(object.airport)) {
-            routes.push(object);
+            let fullAirport = Object.assign({}, airportMap.get(object.airport));
+            fullAirport.Departures = object.departures;
+            routes.push(fullAirport);
         }
     }
 
     routes.sort((a, b) => {
-        return b.departures - a.departures;
+        return b.Departures - a.Departures;
     });
 
     return routes;

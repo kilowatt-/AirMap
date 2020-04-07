@@ -5,7 +5,7 @@ import {setActiveAirport, unsetActiveAirport} from "../controller/actions";
 import {connect} from "react-redux";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import {airportMap} from "../airportMap";
+import Popup from "react-leaflet/lib/Popup";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -33,6 +33,7 @@ class MainMap extends React.Component {
             position,
             loading: true,
             visibleAirports: [],
+            visibleRoutes: [],
             vL: 0,
             rL: MIN_ZOOM*10
         };
@@ -43,9 +44,14 @@ class MainMap extends React.Component {
         this.renderCircle = this.renderCircle.bind(this);
         this.renderActiveAirport = this.renderActiveAirport.bind(this);
         this.unsetActiveAirport = this.unsetActiveAirport.bind(this);
-        this.renderRoutes = this.renderRoutes.bind(this);
         this.renderMarkers = this.renderMarkers.bind(this);
         this.handleZoomChange = this.handleZoomChange.bind(this);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if ((prevProps.activeAirport && !this.props.activeAirport) || (this.props.activeAirport && prevProps.routes !== this.props.routes)) {
+            this.updateVisibleAirportsOnMap();
+        }
     }
 
     handlePositionChange() {
@@ -54,9 +60,7 @@ class MainMap extends React.Component {
 
             this.setState({ position });
 
-            if (!this.props.activeAirport) {
-                this.updateVisibleAirportsOnMap();
-            }
+            this.updateVisibleAirportsOnMap();
         }
     }
 
@@ -73,52 +77,38 @@ class MainMap extends React.Component {
         let ne = bounds._northEast;
 
         let visibleAirports = [];
+        let source = (this.props.activeAirport) ? this.props.routes : airportDepartureData;
 
-        for (let elem of airportDepartureData) {
+        if (source) {
+            for (let elem of source) {
 
-            let lng = elem.coordinates[0];
-            let lat = elem.coordinates[1];
+                let lng = elem.coordinates[0];
+                let lat = elem.coordinates[1];
 
-            if (lat >= sw.lat && lat <= ne.lat && lng >= sw.lng && lng <= ne.lng) {
-                visibleAirports.push(elem);
+                if (lat >= sw.lat && lat <= ne.lat && lng >= sw.lng && lng <= ne.lng) {
+                    visibleAirports.push(elem);
+                }
+
+                if (visibleAirports.length === AIRPORT_LIMIT) {
+                    break;
+                }
             }
 
-            if (visibleAirports.length === AIRPORT_LIMIT) {
-                break;
+            let vL = 0;
+            if (visibleAirports.length > 0) {
+                vL = visibleAirports[0].Departures;
             }
+
+            this.setState( {visibleAirports, vL} );
         }
-
-        let vL = 0;
-        if (visibleAirports.length > 0) {
-            vL = visibleAirports[0].Departures;
-        }
-
-        this.setState( {visibleAirports, vL} );
-
-
     }
+
 
     calculateRL(zoom) {
         return zoom * 10;
     }
 
-    renderRoutes() {
-        let airportDatabase = airportMap;
-        let { routes } = this.props;
-
-        let airportArray = routes.map((destination) => {
-            let airport = airportDatabase.get(destination.airport);
-            airport.Departures = destination.departures;
-            return airport;
-        });
-
-        return airportArray.map((airport) => {
-            return this.renderCircle(airport, true);
-        });
-    }
-
     renderCircle(airport, representsRoute) {
-
         const lng = airport.coordinates[0];
         const lat = airport.coordinates[1];
         const vC = airport.Departures;
@@ -128,9 +118,7 @@ class MainMap extends React.Component {
 
         const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
 
-        console.log("radius: " + radius);
-
-        return <CircleMarker center={[lat,lng]} key={airport.Airport} radius={radius} onClick={(e) => {
+        return <CircleMarker color={(representsRoute) ? "red" : "dodgerblue"} center={[lat,lng]} key={airport.Airport} radius={radius} onClick={(e) => {
             if (!representsRoute) {
                 const position = [lat, lng];
                 this.mapRef.leafletElement.flyTo(position, this.state.zoom, {duration: 0.25});
@@ -156,10 +144,11 @@ class MainMap extends React.Component {
     }
 
     renderMarkers() {
-
         if (this.props.activeAirport) {
             if (this.props.routes) {
-                const routes = this.renderRoutes();
+                const routes = this.state.visibleAirports.map((airport) => {
+                    return this.renderCircle(airport, true);
+                });
                 routes.push(this.renderActiveAirport());
                 return routes;
             }

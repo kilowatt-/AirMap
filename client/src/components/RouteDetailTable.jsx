@@ -3,7 +3,6 @@ import * as React from "react";
 import {getRouteDataForActiveAirport} from "../controller/actions";
 import {connect} from "react-redux";
 import Spinner from "react-bootstrap/Spinner";
-import {airportMap} from "../airportMap";
 
 class RouteDetailTable extends React.Component {
     componentDidMount() {
@@ -26,20 +25,19 @@ class RouteDetailTable extends React.Component {
                 <Table striped bordered hover size="sm" variant={"dark"} responsive={true} >
                     <thead>
                     <tr>
-                        <th></th>
+                        <th> </th>
                         <th>Airport</th>
                         <th>Weekly Departures</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {this.props.routes ? this.props.routes.map((object, index) => {
-                        let airportDetails = airportMap.get(object.airport);
-                        const flagUrl = `${process.env.PUBLIC_URL}/flags/${airportDetails.State.toLowerCase()}.gif`;
+                    {this.props.routes ? this.props.routes.map((airport, index) => {
+                        const flagUrl = `${process.env.PUBLIC_URL}/flags/${airport.State.toLowerCase()}.gif`;
                         return (
                             <tr key={index}>
                                 <td>{index+1}</td>
-                                <td><img src={flagUrl} alt={airportDetails.State} /> {airportDetails.AirportName} ({airportDetails.iata}/{airportDetails.Airport})</td>
-                                <td>{object.departures.toLocaleString()}</td>
+                                <td><img src={flagUrl} alt={airport.State} /> {airport.AirportName} ({airport.iata}/{airport.Airport})</td>
+                                <td>{airport.Departures.toLocaleString()}</td>
                             </tr>
                         )
                     }) : undefined}
