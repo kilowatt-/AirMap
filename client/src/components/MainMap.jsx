@@ -1,11 +1,10 @@
-import {CircleMarker, Map as LeafletMap, Marker, TileLayer} from "react-leaflet";
+import {CircleMarker, Map as LeafletMap, Marker, Popup, TileLayer} from "react-leaflet";
 import * as React from "react";
 import airportDepartureData from '../airportdeparturedata.json';
 import {setActiveAirport, unsetActiveAirport} from "../controller/actions";
 import {connect} from "react-redux";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import Popup from "react-leaflet/lib/Popup";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -117,16 +116,36 @@ class MainMap extends React.Component {
         const circleRatio = (vC/vL);
 
         const radius = Math.pow(circleRatio, CIRCLE_EXPONENT) * rL;
+        const flagUrl = `${process.env.PUBLIC_URL}/flags/${airport.State.toLowerCase()}.gif`;
+        if (representsRoute) {
 
-        return <CircleMarker color={(representsRoute) ? "red" : "dodgerblue"} center={[lat,lng]} key={airport.Airport} radius={radius} onClick={(e) => {
-            if (!representsRoute) {
+            return <CircleMarker fillOpacity={0.5} color="red" center={[lat, lng]}
+                                 key={airport.Airport} radius={radius} onClick={(e) => {L.DomEvent.stopPropagation(e);}}
+                                 onMouseOver={(e) => {
+                                     e.target.openPopup();
+                                 }}
+                                 onMouseOut={(e) => {
+                                     e.target.closePopup();
+                                 }}
+            >
+                <Popup closeButton={false}><img src={flagUrl} alt={airport.State.toLowerCase()} /> {`${airport.AirportName} (${airport.Airport}/${airport.iata}) - ${airport.Departures}`}</Popup>
+            </CircleMarker>
+        } else {
+            return <CircleMarker center={[lat, lng]}
+                                 key={airport.Airport} radius={radius} onClick={(e) => {
                 const position = [lat, lng];
                 this.mapRef.leafletElement.flyTo(position, this.state.zoom, {duration: 0.25});
                 this.props.setActiveAirport(airport);
-            }
-
-            L.DomEvent.stopPropagation(e);
-        }} />
+                L.DomEvent.stopPropagation(e);
+            }} onMouseOver={(e) => {
+                e.target.openPopup();
+            }} onMouseOut={(e) => {
+                e.target.closePopup();
+            }}
+            >
+                <Popup closeButton={false}><img src={flagUrl} alt={airport.State.toLowerCase()} /> {`${airport.AirportName} (${airport.Airport}/${airport.iata})`}</Popup>
+            </CircleMarker>
+        }
     }
 
     renderActiveAirport() {
