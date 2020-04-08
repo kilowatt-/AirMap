@@ -3,7 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const enforce = require('express-sslify');
 
 const START_EPOCH = 1576368000;
 const END_EPOCH = START_EPOCH + 604800;
@@ -49,7 +48,13 @@ app.get('/routeData/:airportCode', async (req, res) => {
 });
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(enforce.HTTPS({ trustProtoHeader: true }));
+    app.use(function(req, res, next) {
+        if (req.headers['x-forwarded-proto'] == 'https') {
+            res.redirect('http://' + req.hostname + req.url);
+        } else {
+            next();
+        }
+    });
 
     app.use(express.static(path.join(__dirname, '../client/build')));
 
