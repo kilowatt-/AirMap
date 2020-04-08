@@ -4,9 +4,6 @@ import Content from "./Content";
 import Footer from "./Footer";
 import {Container} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import {AIRPORT_LIMIT} from "./MainMap";
 import About from "./About";
 
 class App extends React.Component {

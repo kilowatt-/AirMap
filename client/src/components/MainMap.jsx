@@ -1,5 +1,5 @@
 import {
-    CircleMarker, LayersControl,
+    CircleMarker,
     Map as LeafletMap,
     Marker,
     Popup,

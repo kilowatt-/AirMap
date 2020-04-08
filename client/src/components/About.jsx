@@ -1,4 +1,3 @@
-import Navbar from "react-bootstrap/Navbar";
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 import {AIRPORT_LIMIT} from "./MainMap";
