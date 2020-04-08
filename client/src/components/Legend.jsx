@@ -62,7 +62,7 @@ class Legend extends MapControl {
             for (let i = 0; i < grades.length; i++) {
 
                 labels.push(
-                    `<svg height="${this.props.rL*2.1}" width="${this.props.rL*2.1}">
+                    `<svg height="${grades[i].radius*2.2}" width="${grades[i].radius*2.1}">
                       <circle cx="50%" cy="50%" r="${grades[i].radius}" stroke="#59AE09" stroke-width="3" fill="#59AE09" fill-opacity="0.2" />
                     </svg>
                     ${grades[i].number.toLocaleString()}`
@@ -70,7 +70,7 @@ class Legend extends MapControl {
             }
 
             let labelText = (this.props.active) ? "Weekly departures" : "Departures";
-            div.innerHTML = `<b>${labelText}</b><br />${labels.join("<br />")}`;
+            div.innerHTML = `<b>${labelText}</b><br /><div align="center">${labels.join("<br />")}</div>`;
 
             return div;
         };

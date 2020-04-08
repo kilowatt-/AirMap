@@ -24,7 +24,7 @@ L.Icon.Default.mergeOptions({
 
 const MIN_ZOOM = 3;
 const MAX_ZOOM = 10;
-const ZOOM_RL_MULTIPLIER = 7;
+const ZOOM_RL_MULTIPLIER = 8;
 export const CIRCLE_EXPONENT = 0.57;
 
 export const AIRPORT_LIMIT = 50;
