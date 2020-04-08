@@ -33,7 +33,7 @@ const About = (props) => {
             </Modal.Body>
 
             <Modal.Body>
-                <b>If available</b>, the application show a list of estimated weekly departures by route. This data originates from <a href={"https://opensky-network.org/"}>OpenSky Network</a>.
+                <b>If available</b>, the application show a list of estimated weekly frequencies by route. This data originates from <a href={"https://opensky-network.org/"}>OpenSky Network</a>.
                 The accuracy of this data is limited, as I am using departures from the week of <b>December 15, 2019</b> to plot these estimates.
             </Modal.Body>
             <Modal.Body>

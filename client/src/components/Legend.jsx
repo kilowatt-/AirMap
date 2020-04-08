@@ -69,7 +69,7 @@ class Legend extends MapControl {
                 );
             }
 
-            let labelText = (this.props.active) ? "Weekly departures" : "Departures";
+            let labelText = (this.props.active) ? "Est. weekly frequency" : "Departures";
             div.innerHTML = `<b>${labelText}</b><br /><div align="center">${labels.join("<br />")}</div>`;
 
             return div;

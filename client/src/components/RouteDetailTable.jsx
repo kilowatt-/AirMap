@@ -29,7 +29,7 @@ class RouteDetailTable extends React.Component {
                         <tr>
                             <th className={"fit"} align={"center"}> </th>
                             <th className={"fit"} align={"center"}>Airport</th>
-                            <th className={"fit"} align={"center"}>Estimated Weekly Departures</th>
+                            <th className={"fit"} align={"center"}>Estimated Weekly Frequency</th>
                         </tr>
                         </thead>
                         <tbody>
