@@ -1,7 +1,7 @@
 # AirMap
 [Website](https://airmapp.herokuapp.com)
 
-![screenshot 1](ss1.png =1366x768)
+![screenshot 1](ss1.png)
 
 AirMap is a web application aimed at aviation enthusiasts that want to see the busiest airports from 2019 (by aircraft movements) on a world map.
 
@@ -24,9 +24,9 @@ Detailed data is fetched from OpenSky Network's REST API.
 - Get HTTPS working on Heroku. I have no idea why I keep getting a "Mixed Content" error!
 
 ## Screenshots
-![screenshot 2](ss2.png =1366x768)
-![screenshot 3](ss3.png =1366x768)
-![screenshot 4](ss4.png =1366x768)
+![screenshot 2](ss2.png)
+![screenshot 3](ss3.png)
+![screenshot 4](ss4.png)
 
 ## Sources and references
 [ ICAO iSTARS API Data Service](https://www.icao.int/safety/iStars/Pages/API-Data-Service.aspx)
