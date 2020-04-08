@@ -10,8 +10,9 @@ This application has two modes: summary mode, and detailed mode. More details ab
 
 This web application was developed with React/Redux and Node.js. It is styled with React Bootstrap, and is powered by React Leaflet as its mapping tool.
 
-Static airport data (total number of departures) was sourced from the ICAO iSTARS API and stored in JSON format. Detailed data is fetched from OpenSky Network's REST API.
+Static airport data (total number of departures) was sourced from the ICAO iSTARS API, combined with mwgg's Airport Database for IATA codes and city information,  and stored in JSON format. 
 
+Detailed data is fetched from OpenSky Network's REST API.
 ## Issues/Limitations
 - This application is not responsive on mobile.
 - Many major airports around the world do not have detailed departure data, due to gaps in the data source.
