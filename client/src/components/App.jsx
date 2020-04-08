@@ -81,9 +81,9 @@ class App extends React.Component {
         return (
             <>
                 <Container fluid style={{ paddingLeft: 0, paddingRight: 0, marginLeft: 0}}>
-                    <Col style={{flex: 0.075, flexDirection: "column", paddingLeft: 0, paddingRight: 0, marginLeft: 0}}> <Header showModal={this.state.showModal} modalCallback={this.setShow} /></Col>
-                    <Col style={{flex: 0.85, flexDirection: "column", paddingLeft: 0, paddingRight: 0, marginLeft: 0}}>  <Content /></Col>
-                    <Col style={{flex: 0.075, flexDirection: "column", paddingLeft: 0, paddingRight: 0, marginLeft: 0}}> <Footer /></Col>
+                    <Col style={{flex: 0.1, flexDirection: "column", paddingLeft: 0, paddingRight: 0, marginLeft: 0}}> <Header showModal={this.state.showModal} modalCallback={this.setShow} /></Col>
+                    <Col style={{flex: 0.80, flexDirection: "column", paddingLeft: 0, paddingRight: 0, marginLeft: 0}}>  <Content /></Col>
+                    <Col style={{flex: 0.1, flexDirection: "column", paddingLeft: 0, paddingRight: 0, marginLeft: 0}}> <Footer /></Col>
                 </Container>
 
                 {this.renderModal()}

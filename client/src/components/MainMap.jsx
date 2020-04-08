@@ -24,6 +24,7 @@ L.Icon.Default.mergeOptions({
 
 const MIN_ZOOM = 3;
 const MAX_ZOOM = 10;
+const ZOOM_RL_MULTIPLIER = 7;
 export const CIRCLE_EXPONENT = 0.57;
 
 export const AIRPORT_LIMIT = 50;
@@ -41,7 +42,7 @@ class MainMap extends React.Component {
             loading: true,
             visibleAirports: [],
             vL: 0,
-            rL: MIN_ZOOM*10
+            rL: MIN_ZOOM*ZOOM_RL_MULTIPLIER
         };
 
         this.mapRef = React.createRef();
@@ -87,7 +88,7 @@ class MainMap extends React.Component {
     handleZoomChange() {
         if (this.mapRef) {
             let zoom = this.mapRef.leafletElement.getZoom();
-            let rL = this.calculateRL(zoom);
+            let rL = zoom * ZOOM_RL_MULTIPLIER;
 
             this.setState({zoom, rL});
         }
@@ -123,11 +124,6 @@ class MainMap extends React.Component {
 
             this.setState( {visibleAirports, vL} );
         }
-    }
-
-
-    calculateRL(zoom) {
-        return zoom * 10;
     }
 
     drawLines() {
@@ -249,7 +245,7 @@ class MainMap extends React.Component {
                     maxZoom={MAX_ZOOM}
                     attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors <br />
                 Data sources: ICAO iSTARS API Data Service, OpenSky Network'
-                    url="http://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+                    url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
                 />
                 <Legend visibleAirports={this.state.visibleAirports} rL={this.state.rL} active={(this.props.activeAirport !== undefined)} />
                 {this.renderMarkers()}

@@ -56,8 +56,8 @@ export function getRouteDataForActiveAirport(airportCode) {
 
                 if (status === 404) {
                     errMsg = 'Sorry, no route data found for this airport.'
-                } else if (status === 504) {
-                    errMsg = 'Sorry, the API is unable to respond at the moment. Please try again later.'
+                } else if (status === 502 || status === 503) {
+                    errMsg = 'Sorry, the data service is unable to respond at the moment. Please try again later.'
                 } else {
                     errMsg = 'Sorry, we had trouble fetching route data. Please try again later.'
                 }

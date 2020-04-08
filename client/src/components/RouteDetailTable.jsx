@@ -3,6 +3,7 @@ import * as React from "react";
 import {getRouteDataForActiveAirport} from "../controller/actions";
 import {connect} from "react-redux";
 import Spinner from "react-bootstrap/Spinner";
+import './style.css';
 
 class RouteDetailTable extends React.Component {
     componentDidMount() {
@@ -12,7 +13,9 @@ class RouteDetailTable extends React.Component {
     render() {
         if (this.props.fetchingData) {
             return (
-                <Spinner animation="border" role="status" />
+                <div style={{"alignContents": "center"}}>
+                    <Spinner animation="border" role="status" variant={"primary"} />
+                </div>
             )
         } else if (this.props.fetchingDataErr !== '') {
             return (
@@ -20,13 +23,13 @@ class RouteDetailTable extends React.Component {
             )
         } else {
             return (
-                <div style={{"overflowY": "scroll", "maxHeight": "75vh"}}>
-                    <Table striped bordered hover size="sm" variant={"dark"} responsive={true} >
-                        <thead>
+                <div className={"tableDiv"}>
+                    <Table striped bordered hover size="sm" variant={"dark"} responsive={true} style={{"width": "100%"}} >
+                        <thead >
                         <tr>
-                            <th> </th>
-                            <th>Airport</th>
-                            <th>Estimated Weekly Departures</th>
+                            <th className={"fit"} align={"center"}> </th>
+                            <th className={"fit"} align={"center"}>Airport</th>
+                            <th className={"fit"} align={"center"}>Estimated Weekly Departures</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -34,16 +37,15 @@ class RouteDetailTable extends React.Component {
                             const flagUrl = `${process.env.PUBLIC_URL}/flags/${airport.State.toLowerCase()}.gif`;
                             return (
                                 <tr key={index}>
-                                    <td>{index+1}</td>
-                                    <td><img src={flagUrl} alt={airport.State} /> {airport.AirportName} ({airport.iata}/{airport.Airport})</td>
-                                    <td>{airport.Departures.toLocaleString()}</td>
+                                    <td className={"fit"}>{index+1}</td>
+                                    <td className={"fit"}><img src={flagUrl} alt={airport.State} /> {airport.AirportName} ({airport.iata}/{airport.Airport})</td>
+                                    <td className={"fit"}>{airport.Departures.toLocaleString()}</td>
                                 </tr>
                             )
                         }) : undefined}
                         </tbody>
                     </Table>
                 </div>
-
             )
         }
     }

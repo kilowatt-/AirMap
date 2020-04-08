@@ -9,6 +9,7 @@ class Legend extends MapControl {
     constructor(props) {
         super(props);
         this.addLegend = this.addLegend.bind(this);
+        this.removeLegend = this.removeLegend.bind(this);
 
         this.state = {
             legendControl: undefined
@@ -70,16 +71,26 @@ class Legend extends MapControl {
 
             let labelText = (this.props.active) ? "Weekly departures" : "Departures";
             div.innerHTML = `<b>${labelText}</b><br />${labels.join("<br />")}`;
+
             return div;
         };
-
-
         legendControl.addTo(map);
+    }
+
+    removeLegend() {
+        const { legendControl } = this.state;
+        const { map } = this.props.leaflet;
+
+        legendControl.remove(map);
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.visibleAirports !== this.props.visibleAirports) {
-            this.addLegend();
+            if (this.props.visibleAirports.length > 0) {
+                this.addLegend();
+            } else {
+                this.removeLegend();
+            }
         }
     }
 }

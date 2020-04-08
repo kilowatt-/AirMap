@@ -14,31 +14,29 @@ class AirportDetails extends React.Component {
     }
 
     renderAirportDetails() {
-        const maxHeight = window.innerHeight;
-
         const {activeAirport} = this.props;
         const flagUrl = `${process.env.PUBLIC_URL}/flags/${activeAirport.State.toLowerCase()}.gif`;
         return (
-            <div>
+            <Container>
                 <h2 align={"center"} style={{wordBreak: "break-all"}}>{activeAirport.AirportName}</h2>
                 <h4 align={"center"}>{activeAirport.iata}/{activeAirport.Airport}</h4>
-                <Container>
                     <Row>
                         <Col><p align={"center"}><img src={flagUrl} alt={activeAirport.State} width={16} height={11} /> {activeAirport.Name}<br />
                             {activeAirport.city !== '' ? <><b>City: </b> {activeAirport.city}</> : undefined }</p></Col>
                     </Row>
 
-                    <Row><h4>2019 statistics</h4></Row>
+                    <Row style={{marginTop: 15}}><h4>2019 statistics</h4></Row>
                     <Row style={{paddingLeft: 5}}><b>Departures</b>&nbsp;{activeAirport.Departures.toLocaleString()}</Row>
                     <Row style={{paddingLeft: 5}}><b>International</b>&nbsp;{activeAirport.International.toLocaleString()}</Row>
                     <Row style={{paddingLeft: 5}}><b>Domestic</b>&nbsp;{activeAirport.Domestic.toLocaleString()}</Row>
 
-                    <Row style={{marginTop: 15, alignContent: "center"}}>
-                        <h4>Busiest routes</h4>
-                        <RouteDetailTable />
+                    <Row><h4>Busiest routes</h4></Row>
+                    <Row>
+                        <Col style={{"paddingLeft": 0, "maxWidth": "100%"}}>
+                            <RouteDetailTable />
+                        </Col>
                     </Row>
-                </Container>
-            </div>
+            </Container>
         )
     }
 
