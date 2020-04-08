@@ -219,7 +219,7 @@ class MainMap extends React.Component {
     renderMarkers() {
         if (this.props.activeAirport) {
             if (this.props.routes) {
-                const routes = this.state.visibleAirports.map((airport) => {
+                const routes = this.state.visibleAirports.slice(0).reverse().map((airport) => {
                     return this.renderCircle(airport, true);
                 });
                 routes.push(this.renderActiveAirport());
@@ -229,7 +229,7 @@ class MainMap extends React.Component {
             return this.renderActiveAirport();
         } else {
 
-            return this.state.visibleAirports.map((airport) => {
+            return this.state.visibleAirports.slice(0).reverse().map((airport) => {
                 return this.renderCircle(airport, false);
             });
         }
