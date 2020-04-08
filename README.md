@@ -20,6 +20,7 @@ Static airport data (total number of departures) was sourced from the ICAO iSTAR
 
 ## Future enhancements
 - Allow user to select a custom date range to view detailed flights.
+- Get HTTPS working on Heroku. I have no idea why I keep getting a "Mixed Content" error!
 
 ## Screenshots
 ![screenshot 2](ss2.png =1366x768)
