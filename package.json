@@ -1,5 +1,6 @@
 {
   "name": "airmap",
+  "homepage": "https://airmapp.herokuapp.com",
   "private": true,
   "version": "1.0.0",
   "scripts": {
