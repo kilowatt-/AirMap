@@ -23,6 +23,6 @@
     "react-window-dimensions": "^1.0.2"
   },
   "devDependencies": {
-    "concurrently": "^4.0.1"
+    "concurrently": "^5.2.0"
   }
 }
