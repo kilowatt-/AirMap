@@ -21,7 +21,6 @@ Detailed data is fetched from OpenSky Network's REST API.
 
 ## Future enhancements
 - Allow user to select a custom date range to view detailed flights.
-- Get HTTPS working on Heroku. I have no idea why I keep getting a "Mixed Content" error!
 
 ## Screenshots
 ![screenshot 2](ss2.png)
